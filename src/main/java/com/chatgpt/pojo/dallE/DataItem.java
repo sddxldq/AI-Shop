@@ -1,4 +1,4 @@
-package com.chatgpt.pojo;
+package com.chatgpt.pojo.dallE;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Usage {
-    String prompt_tokens;
-    String completion_tokens;
-    String total_tokens;
+public class DataItem {
+    private String url;
 }

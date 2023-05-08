@@ -1,7 +1,7 @@
 package com.chatgpt.service.impl;
 
-import com.chatgpt.repository.CustomChatGPT;
-import com.chatgpt.service.MessageService;
+import com.chatgpt.repository.CustomDallE;
+import com.chatgpt.service.DallECreateService;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 
 @Service
-public class MessageServiceImpl implements MessageService {
+public class DallECreateServiceImpl implements DallECreateService {
     @Autowired
-    CustomChatGPT customChatGpt;
+    CustomDallE customDallE;
     @Override
-    public String chat(String q) throws IOException {
+    public String createImage(String prompt, Integer n, String size) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        String answer = customChatGpt.getAnswer(httpClient, q);
+        String answer = customDallE.getAnswer(httpClient,prompt,n,size);
         httpClient.close();
         return answer;
     }

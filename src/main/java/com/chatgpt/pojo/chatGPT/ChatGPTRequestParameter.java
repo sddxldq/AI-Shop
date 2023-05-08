@@ -1,4 +1,4 @@
-package com.chatgpt.pojo;
+package com.chatgpt.pojo.chatGPT;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

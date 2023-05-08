@@ -1,8 +1,8 @@
 package com.chatgpt.repository;
-import com.chatgpt.pojo.chatGPT.ChatGPTMessage;
-import com.chatgpt.pojo.chatGPT.ChatGPTRequestParameter;
-import com.chatgpt.pojo.chatGPT.ChatGPTResponseParameter;
-import com.chatgpt.pojo.chatGPT.Choices;
+
+import com.chatgpt.pojo.dallE.DallERequestParameter;
+import com.chatgpt.pojo.dallE.DallEResponseParameter;
+import com.chatgpt.pojo.dallE.DataItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
@@ -23,23 +23,20 @@ import java.util.concurrent.TimeUnit;
 
 @NoArgsConstructor
 @Component
-public class CustomChatGPT {
+public class CustomDallE {
     @Value("${API_KEY}")
     private String apiKey;
-    private String model = "gpt-3.5-turbo";
-    private String url = "https://api.openai.com/v1/chat/completions";
+    private String url = "https://api.openai.com/v1/images/generations";
     private Charset charset = StandardCharsets.UTF_8;
-    private ChatGPTRequestParameter chatGPTRequestParameter = new ChatGPTRequestParameter();
 
     private int responseTimeout = 10000;
 
-    public String getAnswer(CloseableHttpClient client, String question) throws JsonProcessingException {
+    public String getAnswer(CloseableHttpClient client, String prompt, Integer n, String size) throws JsonProcessingException {
         HttpPost httpPost = new HttpPost(url);
         //  Setup body
         ObjectMapper objectMapper = new ObjectMapper();
-        chatGPTRequestParameter.setModel(model);
-        chatGPTRequestParameter.addMessages(new ChatGPTMessage("user", question));
-        HttpEntity httpEntity = new StringEntity(objectMapper.writeValueAsString(chatGPTRequestParameter), charset);
+        DallERequestParameter dallERequestParameter = new DallERequestParameter(prompt,n,size);
+        HttpEntity httpEntity = new StringEntity(objectMapper.writeValueAsString(dallERequestParameter), charset);
         httpPost.setEntity(httpEntity);
         //  Setup header
         httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -54,22 +51,16 @@ public class CustomChatGPT {
         try {
             return client.execute(httpPost, response -> {
                 String resStr = EntityUtils.toString(response.getEntity(), charset);
-                ChatGPTResponseParameter responseParameter = objectMapper.readValue(resStr, ChatGPTResponseParameter.class);
+                DallEResponseParameter dallEResponseParameter = objectMapper.readValue(resStr, DallEResponseParameter.class);
                 String ans = "";
-                for (Choices choice : responseParameter.getChoices()) {
-                    ChatGPTMessage message = choice.getMessage();
-                    chatGPTRequestParameter.addMessages(new ChatGPTMessage(message.getRole(), message.getContent()));
-                    String s = message.getContent().replaceAll("\n+", "\n");
-                    ans += s;
+                for (DataItem dataItem : dallEResponseParameter.getData()){
+                    ans += dataItem.getUrl();
                 }
                 return ans;
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        chatGPTRequestParameter.getMessages().remove(chatGPTRequestParameter.getMessages().size()-1);
         return "Your current network cannot access";
     }
-
-
 }
