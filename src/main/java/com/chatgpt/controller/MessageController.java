@@ -19,6 +19,7 @@ public class MessageController {
     @GetMapping
     private Result get(@RequestParam(defaultValue = "how are you?") String q) throws IOException {
         log.info("query answer for question:{}",q);
+        //test first time push
         String ans = messageService.chat(q);
         return Result.success(ans);
     }
