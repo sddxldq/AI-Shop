@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DallERequestParameter {
+public class DallECreateRequestParameter {
     String prompt;
     Integer n;
     String size;
