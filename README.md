@@ -6,9 +6,9 @@ In addition, you will need to create a src/main/resources/application.properties
 
 spring.jpa.hibernate.ddl-auto=update
 
-spring.datasource.url= <Your database url>
+spring.datasource.url= #Your database url#
   
-spring.datasource.username= <Your database username>
+spring.datasource.username= #Your database username#
   
 spring.datasource.password= <Your database password>
 
