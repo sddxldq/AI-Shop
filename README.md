@@ -10,10 +10,10 @@ spring.datasource.url= #Your database url#
   
 spring.datasource.username= #Your database username#
   
-spring.datasource.password= <Your database password>
+spring.datasource.password= #Your database password#
 
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
   
 spring.jpa.open-in-view=false
   
-API_KEY= <Your api keys>
+API_KEY= #Your api keys#
