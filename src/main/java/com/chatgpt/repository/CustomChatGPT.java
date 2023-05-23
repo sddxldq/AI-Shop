@@ -31,7 +31,7 @@ public class CustomChatGPT {
     private Charset charset = StandardCharsets.UTF_8;
     private ChatGPTRequestParameter chatGPTRequestParameter = new ChatGPTRequestParameter();
 
-    private int responseTimeout = 10000;
+    private int responseTimeout = 100000;
 
     public String getAnswer(CloseableHttpClient client, String question) throws JsonProcessingException {
         HttpPost httpPost = new HttpPost(url);

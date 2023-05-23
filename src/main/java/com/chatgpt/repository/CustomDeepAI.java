@@ -1,14 +1,14 @@
 package com.chatgpt.repository;
 
-import com.chatgpt.pojo.dallE.DallECreateRequestParameter;
-import com.chatgpt.pojo.dallE.DallEResponseParameter;
-import com.chatgpt.pojo.dallE.DataItem;
-import com.fasterxml.jackson.core.JsonProcessingException;
+
+import com.chatgpt.pojo.deepAI.DeepAIResponseParameter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.HttpHeaders;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
@@ -19,30 +19,30 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @NoArgsConstructor
 @Component
-public class CustomDallE {
-    @Value("${API_KEY}")
+public class CustomDeepAI {
+    @Value("${DEEPAI_KEY}")
     private String apiKey;
-    private String url = "https://api.openai.com/v1/images/generations";
+    private String url = "https://api.deepai.org/api/comics-portrait-generator";
     private Charset charset = StandardCharsets.UTF_8;
 
     private int responseTimeout = 100000;
 
-    public List<String> getAnswerByCreate(CloseableHttpClient client, String prompt, Integer n, String size) throws JsonProcessingException {
+    public String getAnswerByCreate(CloseableHttpClient client, String prompt) {
         HttpPost httpPost = new HttpPost(url);
-        //  Setup body
+        // Add the 'api-key' header
+        httpPost.addHeader("api-key", "8cf2557b-7bc9-478e-b12f-000c8f138329");
         ObjectMapper objectMapper = new ObjectMapper();
-        DallECreateRequestParameter dallECreateRequestParameter = new DallECreateRequestParameter(prompt,n,size);
-        HttpEntity httpEntity = new StringEntity(objectMapper.writeValueAsString(dallECreateRequestParameter), charset);
-        httpPost.setEntity(httpEntity);
-        //  Setup header
-        httpPost.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
-        httpPost.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey);
+        // Create MultipartEntityBuilder
+        MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+        // Add the text field to the entity
+        entityBuilder.addTextBody("text", prompt, ContentType.TEXT_PLAIN);
+        // Build the HttpEntity
+        HttpEntity entity = entityBuilder.build();
+        httpPost.setEntity(entity);
         // setup timeout
         RequestConfig config = RequestConfig
                 .custom()
@@ -53,14 +53,8 @@ public class CustomDallE {
         try {
             return client.execute(httpPost, response -> {
                 String resStr = EntityUtils.toString(response.getEntity(), charset);
-                DallEResponseParameter dallEResponseParameter = objectMapper.readValue(resStr, DallEResponseParameter.class);
-//                String ans = "";
-                List<String> ans = new ArrayList<>();
-                for (DataItem dataItem : dallEResponseParameter.getData()){
-//                    ans += dataItem.getUrl();
-                    ans.add(dataItem.getUrl());
-                }
-                return ans;
+                DeepAIResponseParameter deepAIResponseParameter = objectMapper.readValue(resStr, DeepAIResponseParameter.class);
+                return deepAIResponseParameter.getOutput_url();
             });
         } catch (IOException e) {
             e.printStackTrace();

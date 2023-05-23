@@ -12,6 +12,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequestMapping("chat")
+@CrossOrigin(origins = "*")
 public class MessageController {
 
     @Autowired
