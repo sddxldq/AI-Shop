@@ -58,7 +58,7 @@ public class CustomChatGPT {
                 String ans = "";
                 for (Choices choice : responseParameter.getChoices()) {
                     ChatGPTMessage message = choice.getMessage();
-                    chatGPTRequestParameter.addMessages(new ChatGPTMessage(message.getRole(), message.getContent()));
+//                    chatGPTRequestParameter.addMessages(new ChatGPTMessage(message.getRole(), message.getContent()));
                     String s = message.getContent().replaceAll("\n+", "\n");
                     ans += s;
                 }
@@ -67,7 +67,7 @@ public class CustomChatGPT {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        chatGPTRequestParameter.getMessages().remove(chatGPTRequestParameter.getMessages().size()-1);
+//        chatGPTRequestParameter.getMessages().remove(chatGPTRequestParameter.getMessages().size()-1);
         return "Your current network cannot access";
     }
 

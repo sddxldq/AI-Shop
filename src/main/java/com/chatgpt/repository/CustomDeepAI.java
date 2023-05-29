@@ -26,12 +26,13 @@ import java.util.concurrent.TimeUnit;
 public class CustomDeepAI {
     @Value("${DEEPAI_KEY}")
     private String apiKey;
-    private String url = "https://api.deepai.org/api/comics-portrait-generator";
+//    private String url = "https://api.deepai.org/api/";
     private Charset charset = StandardCharsets.UTF_8;
 
     private int responseTimeout = 100000;
 
-    public String getAnswerByCreate(CloseableHttpClient client, String prompt) {
+    public String getAnswerByCreate(CloseableHttpClient client, String text, String style) {
+        String url = "https://api.deepai.org/api/" + style;
         HttpPost httpPost = new HttpPost(url);
         // Add the 'api-key' header
         httpPost.addHeader("api-key", "8cf2557b-7bc9-478e-b12f-000c8f138329");
@@ -39,7 +40,7 @@ public class CustomDeepAI {
         // Create MultipartEntityBuilder
         MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
         // Add the text field to the entity
-        entityBuilder.addTextBody("text", prompt, ContentType.TEXT_PLAIN);
+        entityBuilder.addTextBody("text", text, ContentType.TEXT_PLAIN);
         // Build the HttpEntity
         HttpEntity entity = entityBuilder.build();
         httpPost.setEntity(entity);

@@ -5,5 +5,5 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.IOException;
 
 public interface DeepAIService {
-    String createImage(String prompt) throws IOException;
+    String createImage(String text, String style) throws IOException;
 }

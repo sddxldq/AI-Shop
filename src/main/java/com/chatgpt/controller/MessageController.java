@@ -19,8 +19,9 @@ public class MessageController {
     private MessageService messageService;
     @GetMapping
     private Result get(@RequestParam(defaultValue = "how are you?") String q) throws IOException {
-        log.info("query answer for question:{}",q);
+        log.info("query gpt answer for question:{}",q);
         String ans = messageService.chat(q);
+        log.info("the gpt answer is:{}",ans);
         return Result.success(ans);
     }
 

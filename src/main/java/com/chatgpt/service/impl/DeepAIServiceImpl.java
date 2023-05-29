@@ -15,9 +15,9 @@ public class DeepAIServiceImpl implements DeepAIService {
     @Autowired
     CustomDeepAI customDeepAI;
     @Override
-    public String createImage(String prompt) throws IOException {
+    public String createImage(String text, String style) throws IOException {
         CloseableHttpClient httpClient = HttpClients.createDefault();
-        String answer = customDeepAI.getAnswerByCreate(httpClient,prompt);
+        String answer = customDeepAI.getAnswerByCreate(httpClient,text,style);
         httpClient.close();
         return answer;
     }
